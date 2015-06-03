@@ -3,9 +3,9 @@ fn main() {
 	let lineReader = reader.lines();
 
 	let mut lines : Vec<&str> = vec![];
-	for line in lineReader.iter() {
+	for lineContainer in lineReader.iter() {
 		match lineContainer {
-			Some(Ok(a)) => {
+			Some(Ok(line)) => {
 				lines.push(line);
 			},
 			_ => {
