@@ -1,25 +1,35 @@
 use std::io;
-use std::io::prelude::*;
+use std::io::Read;
+extern crate libc;
 
 fn main() {
-	let stdin = io::stdin();
-	let mut locked = stdin.lock();
 
-	let mut all_lines : String = String::new();
+	let istty = unsafe { libc::isatty(libc::STDIN_FILENO as i32) } != 0;
+	if istty { // If there's no pipe
+		println!("No piped input!");
+	} else { // If there's piped input
+		let stdin = io::stdin();
+		let mut locked = stdin.lock();
+		let mut all_lines : String = String::new();
+		match locked.read_to_string(&mut all_lines) {
+			Ok(a) => println!("stdin has length: {}", a),
+			_ => println!("Error!")
+		};
 
-	println!("a");
-	let stdin_bytes_count = locked.bytes().count();
-	println!("{}", stdin_bytes_count);
+		let lines : Vec<&str> = all_lines.split("\n").collect();
 
-	match locked.read_to_string(&mut all_lines) {
-		Ok(a) => println!("stdin has length: {}", a),
-		_ => println!("Error!")
-	};
-	println!("b");
-
-	let lines : Vec<&str> = all_lines.split("\n").collect();
-
-	for line in lines {
-		println!("{}", line);
+		let mut curr_index : u32 = 0;
+		let num_lines = lines.len() as u32;
+		for line in lines {
+			curr_index = curr_index + 1;
+			print!("{}", line);
+			if curr_index != num_lines {
+				print!("\n");
+			}
+		}
 	}
+}
+
+fn get_filenames(lines: Vec<&str>) -> Vec<&str> {
+	
 }
