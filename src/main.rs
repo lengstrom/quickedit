@@ -1,28 +1,21 @@
+use std::io;
+use std::io::prelude::*;
+
 fn main() {
-	let reader = std::io::stdin();
-	let mut lines : Vec<String> = Vec::new();
-	let mut bytes : Vec<&u8> = Vec::new();
-	reader.read_to_end(bytes);
-	match reader.read_to_end(bytes) {
-		Err(e) => println!("{}", e),
-		_ => {}
+	let lockedStdin = io::stdin().lock();
+	let byteLines : Vec<u8> = Vec::new();
+	let lines : Vec<String> = Vec::new();
+
+	match lockedStdin.read_to_end(byteLines) {
+		Ok(a) => println!("stdin has length: {}", a),
+		_ => println!("Error!")
 	}
 
-	// assume utf8
-	for bytes_line in bytes.iter() {
-		match std::string::String::from_utf8(bytes_line) {
-			Ok(s) => {
-				lines.push(s)
-			},
-			_ => {
-
-			}
-		}
+	for byteLine in byteLines.iter() {
+		lines.push(String::from_utf8(byteLine).unwrap());
 	}
 
-	for i in lines.iter() {
-		println!("{}", i);
+	for line in lines.iter() {
+		println!("{}", line);
 	}
-
-
 }
