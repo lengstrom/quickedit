@@ -2,20 +2,24 @@ use std::io;
 use std::io::prelude::*;
 
 fn main() {
-	let lockedStdin = io::stdin().lock();
-	let byteLines : Vec<u8> = Vec::new();
-	let lines : Vec<String> = Vec::new();
+	let stdin = io::stdin();
+	let mut locked = stdin.lock();
 
-	match lockedStdin.read_to_end(byteLines) {
+	let mut all_lines : String = String::new();
+
+	println!("a");
+	let stdin_bytes_count = locked.bytes().count();
+	println!("{}", stdin_bytes_count);
+
+	match locked.read_to_string(&mut all_lines) {
 		Ok(a) => println!("stdin has length: {}", a),
 		_ => println!("Error!")
-	}
+	};
+	println!("b");
 
-	for byteLine in byteLines.iter() {
-		lines.push(String::from_utf8(byteLine).unwrap());
-	}
+	let lines : Vec<&str> = all_lines.split("\n").collect();
 
-	for line in lines.iter() {
+	for line in lines {
 		println!("{}", line);
 	}
 }
